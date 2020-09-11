@@ -17,9 +17,25 @@ global resultspath1 "~/Dropbox/Research/Visas/Analysis"
 
 xls2dta , save("$temppath/", replace) allsheets : import excel  "$datapath1/FYs97-19_NIVDetailTable.xlsx", firstrow
 
+
+local files : dir "$temppath/" files "*.dta"
+
+
+
+forvalues i = 1/23 {
+	use "$temppath/FYs97-19_NIVDetailTable_`i'"
+	local year = (1996 + `i')
+	save "$temppath/FYs97-19_NIVDetailTable_`year'", replace
+	erase "$temppath/FYs97-19_NIVDetailTable_`i'"
+	clear
+}
+*this was working great... until the back slashes flipped to front slashes! why???
+
+
+
 /***
 Next steps:
-1) name files with year
+1) name files with year - still working 
 2) confirm country names consistent
 3) loop through to name appropriately, and merge based on country names
 ***/
