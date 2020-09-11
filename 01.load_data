@@ -1,0 +1,25 @@
+clear all
+set more off
+
+global datapath1 "~/Dropbox/Research/Visas/Data"
+global temppath "~/Dropbox/Research/Visas/Analysis/temp"
+global resultspath1 "~/Dropbox/Research/Visas/Analysis"
+
+
+* Sep 2020
+* Last updated by: JL
+* Goal: Get US State Department visa data in Stata
+
+********
+* start with importing the master data from NOAA
+********
+
+
+xls2dta , save("$temppath/", replace) allsheets : import excel  "$datapath1/FYs97-19_NIVDetailTable.xlsx", firstrow
+
+/***
+Next steps:
+1) name files with year
+2) confirm country names consistent
+3) loop through to name appropriately, and merge based on country names
+***/
