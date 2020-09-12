@@ -19,11 +19,6 @@ global resultspath1 "~/Dropbox/Research/Visas/Analysis"
 xls2dta , save("$temppath/", replace) allsheets : import excel  "$datapath1/FYs97-19_NIVDetailTable.xlsx", firstrow
 
 
-local files : dir "$temppath/" files "*.dta"
-
-*save blank file to append to
-clear
-save "$resultspath1/country_visas_97-19.dta", emptyok replace
 
 forvalues i = 1/23 {
 	di `i'
@@ -37,32 +32,61 @@ forvalues i = 1/23 {
 	*drop continent summaries - all are empty and can be rebuilt
 	drop if BCC == .
 	*save with year in file name
-	save "$temppath/FYs97-19_NIVDetailTable_`year'", replace
+	save "$temppath/Visa_Detail_Table_`year'", replace
 	clear
 	*shell erase "$temppath/FYs97-19_NIVDetailTable_`i'"
 }
 
+*append to one big file by country year
+ssc install fs
+cd "$temppath"
+clear
+fs Visa_Detail_Table_*.dta
+append using `r(files)'
+save "$resultspath1/country_visas_append_97-19.dta"
+
+/*** 
+ok not sure why, but i'm going to try an append here. 
+testing how consistent country names are, i guess?
+***/
 
 
-/****
-this one isn't as useful
-forvalues i = 1/23 {
-	di `i'
+*OK - this is the first file (1997)
+*just setting up for the merge
+use "$temppath/FYs97-19_NIVDetailTable_1"
+*rename variables with year
+syntax [varlist]
+foreach var of local varlist {
+	rename `var' `var'_1997
+}
+*rename country variable
+rename FiscalYear* country
+*drop continent summaries - all are empty and can be rebuilt
+drop if BCC == .
+save "$resultspath1/country_visas_merged.dta",replace
+
+clear all
+
+*This is the merge! For the rest of the years. and it maxes out my variable count
+forvalues i = 2/23 {
+	use "$temppath/FYs97-19_NIVDetailTable_`i'"
 	local year = (1996 + `i')
-	di `year'
-	cd "$temppath"
-	shell rename "FYs97-19_NIVDetailTable_`i'" FYs97-19_NIVDetailTable_`year'
-	use "$temppath/FYs97-19_NIVDetailTable_`year'"
-	sum
+	*drop continent summaries - all are empty and can be rebuilt
+	drop if BCC == .
+	*rename variables with year
+	syntax [varlist]
+	foreach var of local varlist {
+		rename `var' `var'_`year'
+	}
+	*rename country variable
+	rename FiscalYear* country
+	save "$temppath/FYs97-19_NIVDetailTable_`i'", replace
+	use "$resultspath1/country_visas_merged.dta"
+	merge m:1 country using "$temppath/FYs97-19_NIVDetailTable_`i'"
+	drop _merge
+	save "$resultspath1/country_visas_merged.dta", replace
+	sleep 500
 	clear
 }
-***/
 
 
-
-/***
-Next steps:
-1) name files with year DONE
-2) confirm country names consistent THEY'RE NOT
-3) loop through to name appropriately, and merge based on country names NEXT
-***/
