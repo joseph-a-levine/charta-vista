@@ -2,7 +2,8 @@ clear all
 set more off
 
 global datapath1 "~/Dropbox/Research/Visas/Data"
-global temppath "~/Dropbox/Research/Visas/Analysis/temp"
+global temppath "~/Dropbox/Research/Visas/Analysis/Temp"
+global temppath1 "C:/Users/240-370-8956/Desktop/temp"
 global resultspath1 "~/Dropbox/Research/Visas/Analysis"
 
 
@@ -11,7 +12,7 @@ global resultspath1 "~/Dropbox/Research/Visas/Analysis"
 * Goal: Get US State Department visa data in Stata
 
 ********
-* start with importing the master data from NOAA
+* start with importing the master data from State Department
 ********
 
 
@@ -20,22 +21,48 @@ xls2dta , save("$temppath/", replace) allsheets : import excel  "$datapath1/FYs9
 
 local files : dir "$temppath/" files "*.dta"
 
-
+*save blank file to append to
+clear
+save "$resultspath1/country_visas_97-19.dta", emptyok replace
 
 forvalues i = 1/23 {
+	di `i'
 	use "$temppath/FYs97-19_NIVDetailTable_`i'"
 	local year = (1996 + `i')
+	*rename country variable
+	rename FiscalYear* country
+	*generate year variable
+	g year = `year'
+	order year, after(country)
+	*drop continent summaries - all are empty and can be rebuilt
+	drop if BCC == .
+	*save with year in file name
 	save "$temppath/FYs97-19_NIVDetailTable_`year'", replace
-	erase "$temppath/FYs97-19_NIVDetailTable_`i'"
+	clear
+	*shell erase "$temppath/FYs97-19_NIVDetailTable_`i'"
+}
+
+
+
+/****
+this one isn't as useful
+forvalues i = 1/23 {
+	di `i'
+	local year = (1996 + `i')
+	di `year'
+	cd "$temppath"
+	shell rename "FYs97-19_NIVDetailTable_`i'" FYs97-19_NIVDetailTable_`year'
+	use "$temppath/FYs97-19_NIVDetailTable_`year'"
+	sum
 	clear
 }
-*this was working great... until the back slashes flipped to front slashes! why???
+***/
 
 
 
 /***
 Next steps:
-1) name files with year - still working 
-2) confirm country names consistent
-3) loop through to name appropriately, and merge based on country names
+1) name files with year DONE
+2) confirm country names consistent THEY'RE NOT
+3) loop through to name appropriately, and merge based on country names NEXT
 ***/
