@@ -102,9 +102,18 @@ save "$temppath/cleaned_working_seds.dta", replace
 
 *xtline temporaryvisaholder_all if substr(field,1,3) == "All", overlay 
 
-xtline temporaryvisaholder_all if substr(field,1,3) == "All" | field == "Economics", overlay 
+*xtline temporaryvisaholder_all if substr(field,1,3) == "All" | field == "Economics", overlay 
 
-xtline temporaryvisaholder_all if field == "All social sciences fields" | field == "Economics" | field == "All humanities fields" | field == "All engineering fields" | field == "All life sciences fields", overlay
+
+*These are kind of the best for illustrating my visa point
+*xtline temporaryvisaholder_all if field == "All social sciences fields" | field == "Economics" | field == "All humanities fields" | field == "All engineering fields" | field == "All life sciences fields", overlay
+*xtline uscitizenorpermanentresident_all if field == "All social sciences fields" | field == "Economics" | field == "All humanities fields"  | field == "All life sciences fields", overlay
+
+#delimit
+xtline frombachelors_all if field == "All social sciences fields" | field == "Economics" |
+ field == "All humanities fields"  | field == "All life sciences fields", overlay
+ scheme(s1color);
+#delimit cr
 
 
 
