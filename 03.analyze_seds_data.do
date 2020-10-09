@@ -1,16 +1,46 @@
-clear all
-set more off
+*------------------Header---------------------
+* Analyze the data extracted from the NSF's Survey of Earned Doctorates
+* Hopefully make some pretty graphs
+* 03a.analyze_seds_data.do 
+* Last edited date: 2020-10-09
+* Last edited by: Joseph Levine
+* Goal:  Import the data I cleaned in (02a.SEDs_profile_clean_merge.ipynb) ///
+*        and begin analysis
+* Notes: TO ANYONE CURIOUS ABOUT THIS PROJECT, THE ABOVE CLEANING FILE WILL ///
+*		 BE MUCH MORE USEFUL THAN THIS ONE
+*---------------------------------------------
 
-global datapath1 "~/Dropbox/Research/Visas/Data"
-global temppath "~/Dropbox/Research/Visas/Analysis"
-global temppath1 "C:/Users/240-370-8956/Desktop/temp"
-global resultspath1 "~/Dropbox/Research/Visas/Analysis"
 
 
-* Sep 2020
-* Last updated by: JL
-* Goal: Import the data I cleaned in (02a.SEDs_profile_clean_merge.ipynb) and begin analysis
-* TO ANYONE CURIOUS ABOUT THIS PROJECT, THE ABOVE CLEANING FILE WILL BE MUCH MORE USEFUL THAN THIS ONE
+
+
+
+*-------------------Program set-up-------------------------------
+
+version 15		  // Set version number for backward compatibility
+set more off      // Disable partitioned output 
+pause on		  // Enables pause, to assist with debugging	
+clear all  		  // Start with a clean slate
+set linesize 100  // Line size limit to make output/logs more readable
+set mem 15m		  // Sets usable memory in the evironment /*\ MUST CHECK FILE SIZE \*/
+macro drop _all   // Clear all macros
+cap log close     // Close any open log files
+
+/*\ ATTENTION \*/
+
+global datapath1		 "~/Dropbox/Research/Visas/Data"
+global temppath 		 "~/Dropbox/Research/Visas/Analysis"
+global temppath1   		 "C:/Users/240-370-8956/Desktop/temp"
+global resultspath1 	 "~/Dropbox/Research/Visas/Analysis"
+
+log using "$temppath/1_analyze_seds_$S_DATE.txt", replace text   // Open log file
+
+*----------------------------------------------------------------
+
+
+clear
+
+
 
 
 ********
@@ -106,14 +136,34 @@ save "$temppath/cleaned_working_seds.dta", replace
 
 
 *These are kind of the best for illustrating my visa point
-*xtline temporaryvisaholder_all if field == "All social sciences fields" | field == "Economics" | field == "All humanities fields" | field == "All engineering fields" | field == "All life sciences fields", overlay
-*xtline uscitizenorpermanentresident_all if field == "All social sciences fields" | field == "Economics" | field == "All humanities fields"  | field == "All life sciences fields", overlay
+*xtline temporaryvisaholder_all if field == "All social sciences fields" | ///
+*field == "Economics" | field == "All humanities fields" | ///
+*field == "All engineering fields" | field == "All life sciences fields", overlay
 
+
+*xtline uscitizenorpermanentresident_all if field == "All social sciences fields"///
+* | field == "Economics" | field == "All humanities fields"  | ///
+*field == "All life sciences fields", overlay
+
+
+/*
 #delimit
 xtline frombachelors_all if field == "All social sciences fields" | field == "Economics" |
  field == "All humanities fields"  | field == "All life sciences fields", overlay
  scheme(s1color);
 #delimit cr
 
+*/
 
 
+
+
+
+
+
+
+
+clear all
+log close
+
+exit
