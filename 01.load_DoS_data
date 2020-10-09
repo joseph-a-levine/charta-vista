@@ -1,22 +1,45 @@
-clear all
-set more off
+*------------------Header---------------------
+* Loads department of state data on visas by type and year
+* 01b.load_dos_data.do
+* Last edited date: 2020-10-09
+* Last edited by: Joseph Levine
+*---------------------------------------------
 
-global datapath1 "~/Dropbox/Research/Visas/Data"
-global temppath "~/Dropbox/Research/Visas/Analysis/Temp"
-global temppath1 "C:/Users/240-370-8956/Desktop/temp"
-global resultspath1 "~/Dropbox/Research/Visas/Analysis"
+
+*-------------------Program set-up-------------------------------
+
+version 15		  // Set version number for backward compatibility
+set more off      // Disable partitioned output 
+pause on		  // Enables pause, to assist with debugging	
+clear all  		  // Start with a clean slate
+set linesize 100  // Line size limit to make output/logs more readable
+set mem 15m		  // Sets usable memory in the evironment /*\ MUST CHECK FILE SIZE \*/
+macro drop _all   // Clear all macros
+cap log close     // Close any open log files
 
 
-* Sep 2020
-* Last updated by: JL
-* Goal: Get US State Department visa data in Stata
+/*\ ATTENTION \*/
+global datapath1 		"~/Dropbox/Research/Visas/Data"
+global temppath 		"~/Dropbox/Research/Visas/Analysis/Temp"
+global temppath1 		"C:/Users/240-370-8956/Desktop/temp"
+global resultspath1 	"~/Dropbox/Research/Visas/Analysis"
+
+log using "$temppath/2_dos_visas_$S_DATE.txt", replace text   // Open log file
+*----------------------------------------------------------------
+
+
+clear
+
+
+
+
 
 ********
 * start with importing the master data from State Department
 ********
 
-
-xls2dta , save("$temppath/", replace) allsheets : import excel  "$datapath1/FYs97-19_NIVDetailTable.xlsx", firstrow
+xls2dta , save("$temppath/", replace) allsheets : import excel  ///
+	"$datapath1/FYs97-19_NIVDetailTable.xlsx", firstrow
 
 
 
@@ -37,6 +60,7 @@ forvalues i = 1/23 {
 	*shell erase "$temppath/FYs97-19_NIVDetailTable_`i'"
 }
 
+
 *append to one big file by country year
 ssc install fs
 cd "$temppath"
@@ -45,10 +69,7 @@ fs Visa_Detail_Table_*.dta
 append using `r(files)'
 save "$resultspath1/country_visas_append_97-19.dta"
 
-/*** 
-ok not sure why, but i'm going to try an append here. 
-testing how consistent country names are, i guess?
-***/
+
 
 
 *OK - this is the first file (1997)
@@ -59,6 +80,8 @@ syntax [varlist]
 foreach var of local varlist {
 	rename `var' `var'_1997
 }
+
+
 *rename country variable
 rename FiscalYear* country
 *drop continent summaries - all are empty and can be rebuilt
@@ -66,6 +89,8 @@ drop if BCC == .
 save "$resultspath1/country_visas_merged.dta",replace
 
 clear all
+
+
 
 *This is the merge! For the rest of the years. and it maxes out my variable count
 forvalues i = 2/23 {
@@ -90,3 +115,16 @@ forvalues i = 2/23 {
 }
 
 
+
+
+
+
+
+
+
+
+
+clear all
+log close
+
+exit
