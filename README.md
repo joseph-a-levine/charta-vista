@@ -8,3 +8,7 @@ Data on Ph.D. program choice and demographics from the National Science Foundati
 
 State Department data are downloaded and cleaned in the first Stata file; SEDS data are downloaded in the Jupyter Notebook file.
 
+# Analysis
+
+Some analysis files removed 2020-10-03, as I'm now turning this into a more formal write-up. Please contact me jablevine@gmail.com if you have any questions. 
+
