@@ -1,4 +1,4 @@
-Analysis looking at U.S. visas for graduate level education and program choice
+Analysis of U.S. visa issuance for graduate level education and program choice
 
 
 # Data
