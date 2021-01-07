@@ -1,6 +1,5 @@
 Analysis of U.S. visa issuance for graduate level education and program choice. Scraping in Python; analysis in Stata.
 
-
 # Data
 Data on visa issuance from the State Department, [here](https://travel.state.gov/content/travel/en/legal/visa-law0/visa-statistics/nonimmigrant-visa-statistics.html). 
 
