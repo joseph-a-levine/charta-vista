@@ -9,5 +9,6 @@ State Department data are downloaded and cleaned in the first Stata file; SED da
 
 # Analysis
 
-Some analysis files removed 2020-10-03, as I'm now turning this into a more formal write-up. Please contact me jablevine@gmail.com if you have any questions. Implications for PhD applicants in social sciences in the US, foreign and domestic.
+Some analysis files removed 2020-10-03, as I'm now turning this into a more formal write-up. Please contact me jablevine@gmail.com if you have any questions. Implications for PhD applicants in social sciences in the US, foreign and domestic. 
 
+I also used some of these data in forecasting tournaments.
